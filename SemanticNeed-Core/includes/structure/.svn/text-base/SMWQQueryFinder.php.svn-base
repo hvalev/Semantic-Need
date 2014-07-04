@@ -1,0 +1,185 @@
+<?php
+/**
+ * Finder class for SMWQConstraintGateway which has various functions
+ * to retrieve arrays of SMWQQueryGateway Objects objects
+ * @author valev
+ *
+ */
+
+abstract class SMWQQueryFinder extends SMWQQueryGateway{
+	
+	/**
+	 * retrieves queries from given gateway objects qids
+	 * @param	$gateway			array of SMWQGateway objects
+	 * @return  $queries			array of SMWQConstraint objects
+	 */
+	
+	public static function findByQid($gateways){
+		try{
+			//low level error handling
+			if(empty($gateways)){
+				return array();
+			}
+
+			$dummy = new SMWQQueryGateway();
+			//really dumb roundabout way to complete the table name
+			$dummy->setQid('this');
+			$name = $dummy->getVarName('this');
+			
+			$db = SNECoreConfig::getDB();
+			extract($db->tableNames('smwq_query'));
+			$table = preg_replace("/\`/", '', $smwq_query);
+			
+			//even dumber way to do it, but seeing how the Database
+			//class is so inflexible and does not allow identical 
+			//fields with the same name.. or to specify ANDs or ORs
+			//in the select method...
+			$vars = array();
+			$str = '_toreplace_';
+			$count = 0;
+			foreach($gateways as $key => $gateway){
+				$count++;
+				$vars[$str.$count] = $gateway->getQid();
+			}
+			
+			$list = $db->makeList($vars, LIST_OR);
+			$list = preg_replace("/_toreplace_[0-9]*/", $table.'_'.$name, $list);			
+			$sqlres = $db->select($smwq_query, '*' , $list);
+
+			$queries = array();
+			for($i=0;$i<$db->numRows($sqlres);$i++){
+				$query = new SMWQQueryGateway();
+				$query->instantiateFromDb($db->fetchobject($sqlres));
+				$queries[] = $query;
+			}
+			return $queries;
+		}catch(Exception $e){
+			throw new Exception('');
+		}
+	}
+	
+	/** Finds an array of SMWQQuery Objects by the page name they are on
+	 * @param		$page					name of the wikipage			
+	 * @return		$queries				Array of SMWQQuery objects as returned from the DB
+	 */
+	
+	public static function findByPage($page){
+		try{
+			$db = SNECoreConfig::getDB();
+			extract($db->tableNames('smwq_query'));
+			$table = preg_replace("/\`/", '', $smwq_query);
+			
+			$dummy = new SMWQQueryGateway();
+			$dummy->setPage($page);
+			$dummy->setActive('1');
+			
+			$conds = array();
+			$conds[$table.'_'.$dummy->getVarName($dummy->getPage())] = $dummy->getPage();
+			$conds[$table.'_'.$dummy->getVarName($dummy->getActive())] = $dummy->getActive();
+			
+			$sqlres = $db->select($smwq_query, '*' , $conds);
+			
+			$queries = array();
+			for($i=0;$i<$db->numRows($sqlres);$i++){
+				$query = new SMWQQueryGateway();
+				$query->instantiateFromDb($db->fetchobject($sqlres));
+				$queries[] = $query;
+			}
+			return $queries;
+		}catch(Exception $e){ 
+			throw new Exception('');
+		}
+	}
+	
+	/** Finds an array of SMWQQuery Objects through an array of SMWQConstraint objects
+	 * @param		$constraints				Array of SMWQConstraint objects			
+	 * @return		$queries					Array of SMWQQuery objects as returned from the DB
+	 */
+	
+	public static function findByConstraints($constraints){
+		try{
+			if(empty($constraints)){
+				return array();
+			}
+			$db = SNECoreConfig::getDB();
+			extract($db->tableNames('smwq_constraint', 'smwq_query'));
+			
+			//
+			//$table = preg_replace("/\`/", '', $smwq_query);
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//self::rrr();
+			$list = array();
+			$proSQL = '';
+			//get columns and values to be inserted
+			foreach($constraints as $key => $constraint){
+				if($constraint->getIsCategory()){
+					//TODO should i even save the namespace tag of categories in the database
+					$constraint->setProperty(null);
+				}
+				else{
+					$constraint->setValue(null);
+				}
+				$variables = $constraint->getSetVariables();
+				//print_r($variables);
+				//self::rrr();
+				
+				
+				
+				
+				$list[] = $db->makeList($variables, LIST_AND);
+				$proSQL .= '(';
+				foreach($variables as $key => $value){
+					if($value === end($variables)){
+						$proSQL .= ''.$key.' = "'.$value.'"';
+					}
+					else{
+						$proSQL .= ''.$key.' = "'.$value.'" AND ';
+					}
+				}
+				if($constraint == end($constraints)){
+					$proSQL .= ')';
+				}
+				else{
+					$proSQL .= ') OR ';
+				}
+			}
+
+			//self::rrr();
+			//$db->select($smwq_query, '*');
+			$trysql = $db->selectSQLText($smwq_query, '*', $list);
+			//print_r($trysql);
+			//	print_R($variables);
+			$dummyQuery = new SMWQQueryGateway();
+			$dummyConstraint = new SMWQConstraintGateway();
+			
+			//TODO rework with the getDbField
+			$sql = 'SELECT * FROM ' . $smwq_query . ' WHERE smwq_query_qid IN'.
+				' (SELECT smwq_constraint_qid FROM ' . $smwq_constraint . ' WHERE ('.
+				$proSQL.') AND smwq_query_qid IN (SELECT'.
+				' smwq_query_qid FROM '. $smwq_query . ' WHERE smwq_query_active = "1"))';
+			print $sql;
+			self::rr();
+			$queries = array();
+			$sqlres = $db->query($sql);
+			for($i=0;$i<$db->numRows($sqlres);$i++){
+				$query = new SMWQQueryGateway();
+				$query->instantiateFromDb($db->fetchobject($sqlres));
+				$queries[] = $query;
+			}
+			return $queries;
+			
+		}catch(Exception $e){
+			throw new Exception('');
+		}
+	}
+}
+?>

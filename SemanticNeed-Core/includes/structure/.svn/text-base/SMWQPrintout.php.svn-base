@@ -1,0 +1,85 @@
+<?php
+/**Gateway Class for Semantic Need Select Database table that
+ * enables a separation layer between the database and the
+ * in-memory objects through this Gateway Class.
+ * @author Hristo Valev
+ */
+
+class SMWQPrintoutGateway{
+	//TODO http://semantic-mediawiki.org/wiki/Help:Displaying_information
+	//class needs to be expanded to be able to host different types of printouts
+	protected $qid;
+	protected $variable;
+	
+	/** Creates an instance of SMWQQueryGateway from a php stdObject 
+	 * @param		$stdObject			stdObject
+	 * @return		void				
+	 */
+	
+	public function instantiateFromDb($stdObject){
+		$stdObject = (array) $stdObject;
+		foreach($this as $key => $value){
+			$fncSet = 'set'.$key;
+			$fncDb = 'get'.$key.'DbField';
+			$this->$fncSet($stdObject[$this->$fncDb()]); 
+		}
+	}
+	
+	/** Inserts the current SMWQQuery object in the Database 
+	 * @param		void			
+	 * @return		void				
+	 */
+	
+	public function insert(){
+		try{
+			$db = SNECoreConfig::getDB();
+			extract($db->tableNames('smwq_select'));
+			
+			//get columns and values to be inserted
+			foreach($this as $key => $value){
+				if(isset($value)){
+					$fnc = 'get'.$key.'DbField';
+					$tables[] = mysql_escape_string($this->$fnc());
+					$fnc = 'get'.$key;
+					$values[] = mysql_escape_string($this->$fnc());
+				}
+			}
+			
+			if(count($tables) > 0){
+				$sql = 'INSERT INTO ' . $smwq_select . '('.implode($tables,",").') VALUES ("'.implode($values,'","').'")';
+				$db->query($sql);
+			}
+			else{
+				//dummy object
+				//nothing to insert
+			}
+		}catch(Exception $e){
+			throw new Exception('insertion of invalid query data');
+		}
+	}
+	
+	public function setQid($qid){
+		$this->qid = $qid;
+	}
+	
+	public function getQid(){
+		return $this->qid;
+	}
+	
+	protected function getQidDbField(){
+		return "smwq_select_qid";
+	}
+	
+	public function setVariable($var){
+		$this->variable = $var;
+	}
+	
+	public function getVariable(){
+		return $this->variable;
+	}
+	
+	protected function getVariableDbField(){
+		return "smwq_select_variable";
+	}
+}
+?>

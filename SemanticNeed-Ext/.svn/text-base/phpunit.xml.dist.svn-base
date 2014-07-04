@@ -1,0 +1,17 @@
+<phpunit>
+  <testsuites>
+    <testsuite name="SemanticNeedTestSuite">
+    	<!-- each test has to be added here to get executed correctly in 
+    	bamboo ci -->
+      <file>test/SNE_DummyTest.php</file>
+      <file>test/SNE_SemanticQueryManagerTest.php</file>
+    </testsuite>
+  </testsuites>
+  
+  <logging>
+	<!-- coverage report creation -->
+    <log type="coverage-xml" target="coverage.xml"/>
+	<!-- log4j xml result output generation -->
+    <log type="junit" target="junit.xml" logIncompleteSkipped="false"/>
+  </logging>
+</phpunit>

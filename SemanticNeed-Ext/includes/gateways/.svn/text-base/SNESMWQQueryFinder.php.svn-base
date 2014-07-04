@@ -1,0 +1,62 @@
+<?php
+/**
+ * finder class that searches the database and returns objects of type
+ * (SNE)SMWQQueryGateway
+ * @author spell
+ *
+ */
+
+class SNESMWQQueryFinder extends SNESMWQQueryGateway{
+	
+	/**
+	 * retrieves all queries from the database
+	 * @return  $queries			array of SMWQQuery objects
+	 */
+	
+	public function findAll($offset = null, $limit = null){
+		try{
+			$db = SNECoreConfig::getDB();
+			extract($db->tableNames('smwq_query'));
+
+			$sql = 'SELECT * FROM ' . $smwq_query . '';
+			if(isset($limit)){
+				$sql .= " LIMIT $limit ";
+			}
+			if(isset($offset)){
+				$sql .= " OFFSET $offset ";
+			}
+
+			$queries = array();
+			$sqlres = $db->query($sql);
+			for($i=0;$i<$db->numRows($sqlres);$i++){
+				$query = new SNESMWQQueryGateway();
+				$query->instantiateFromDb($db->fetchobject($sqlres));
+				$queries[] = $query;
+			}
+			return $queries;
+		}catch(Exception $e){
+			throw new Exception('');
+		}
+	}
+	
+	/**
+	 * retrieves number of queries from the database
+	 * @return  $queries			array of SMWQQuery objects
+	 */
+	
+	public function findAllCount(){
+		try{
+			$db = SNECoreConfig::getDB();
+			extract($db->tableNames('smwq_query'));
+
+			$sql = 'SELECT COUNT(*) FROM ' . $smwq_query . '';
+			
+			$sqlres = $db->query($sql);
+			$count = (array) $db->fetchobject($sqlres);
+			return $count['COUNT(*)'];
+		}catch(Exception $e){
+			throw new Exception('');
+		}
+	}
+}
+?>

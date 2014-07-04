@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/waves/!svn/ver/4246/trunk/SemanticNeed/SemanticNeed-Ext/includes/gateways
+END
+SNESMWQConstraintGateway.php
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/includes/gateways/SNESMWQConstraintGateway.php
+END
+SNESMWQQueryGateway.php
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/includes/gateways/SNESMWQQueryGateway.php
+END
+SNEVariableDisplay.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/includes/gateways/SNEVariableDisplay.php
+END
+SNESMWQQueryFinder.php
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/includes/gateways/SNESMWQQueryFinder.php
+END
+SNESMWQConstraintFinder.php
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/includes/gateways/SNESMWQConstraintFinder.php
+END
+SNESMWQPrintoutFinder.php
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/includes/gateways/SNESMWQPrintoutFinder.php
+END
+SNESMWQPrintoutGateway.php
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/includes/gateways/SNESMWQPrintoutGateway.php
+END

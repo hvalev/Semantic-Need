@@ -1,0 +1,77 @@
+Semantic Need PHPUnit Test cases
+=======================================
+
+In this document you will find : 
+
+1. Prerequisite
+2. PHPUnit Install Notes
+3. Semantic Need PHPUnit Test Execution
+4. Advanced Semantic Need PHPUnit Test Execution
+
+-------------------------------------------------------------------------------
+
+1. Prerequisite
+Make sure that you use a recent version of PHP (>= PHP 5.2)
+
+
+2. PHPUnit Install Notes
+Install and configure PHPUnit ( http://www.phpunit.de) , there are two distinct option to do this: 
+
+   2.1 Install PHPUnit using PEAR package manager:
+       - Make sure that the PEAR package manager is installed in your PHP environment (if not, execute the go-pear script in your PHP directory - c.f. http://pear.php.net/manual/en/installation.getting.php)
+	   - If the PHPUnit package is not yet installed (it might be as part of the core PEAR packages) call :
+           pear channel-discover pear.phpunit.de and
+           pear install phpunit/PHPUnit
+	     (c.f. http://www.phpunit.de/manual/current/en/installation.html)
+   2.2 Install PHPUnit Manually:
+       - get the actual PHPUnit Version from : http://pear.phpunit.de/ (download as tar.gz archiv)
+       - follow the instructions on : http://stackoverflow.com/questions/628986/how-do-you-install-phpunit-without-using-pear-on-mac-os-x-10-5
+
+
+3. Semantic Need  PHPUnit Test Execution
+Semantic Need PHPUnit Tests Cases can be executed one by one with particular PHPUnit calls (3.1), or all by one in a singel PHPUnit call(3.2). Theses two options are described below:
+
+   3.1  Single PHPUnit Test execution:
+        - Open a console and go to the <MediaWiki Semantic Need Test Install>/extensions/SemanticNeed-Ext/test/ directory of a running MediaWiki test installation (the MySQL server needs to run)
+        - Run :
+		
+		    phpunit CLASSNAME.php  --include-path <Path to Test MediaWiki Running Semantic Need>
+			
+		  to execute tests (note that test data will be stored in separate temporary database tables, not affecting the runtime system), e.g. for the 'WoogleUtilTest.php' PHPUnit Test Class this call might look like the following (with Windows OS):  
+		  
+		    phpunit --include-path E:/dev/Programme/xampp/htdocs/mediawiki-1.17.0-WOO WoogleUtilTest.php
+		  
+   3.2  PHPUnit TestSuite Execution:
+        - A PHPUnit TestSuite can be used to execute a set of PHPUnit Tests in one PHPUnit call (cf. http://www.phpunit.de/manual/current/en/organizing-tests.html#organizing-tests.xml-configuration )
+        - TODO: This is not implemented yet!
+		  
+4. Advanced Woogle4MediaWiki PHPUnit Test Execution
+TODO: This is not implemented yet!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--- old ----
+1. Make sure that you use a recent version of PHP (>= PHP 5.2)
+2. Make sure that the PEAR package manager is installed in your PHP environment (if not, execute the go-pear script in your PHP directory - c.f. http://pear.php.net/manual/en/installation.getting.php)
+3. If the PHPUnit package is not yet installed (it might be as part of the core PEAR packages) call 
+	pear channel-discover pear.phpunit.de and
+	pear install phpunit/PHPUnit
+	(c.f. http://www.phpunit.de/manual/current/en/installation.html)
+4. Go to the \extensions\SemanticNeed\test\ directory of a running MediaWiki test installation (i.e. the MySQL server needs to run)
+5. Run "phpunit CLASSNAME.php" to execute tests (note that test data will be stored in separate temporary database tables, not affecting the runtime system)

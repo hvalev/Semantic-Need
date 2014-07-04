@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!-- 
+
+This is an ANT (http://ant.apache.org) build file to for running PHPUnit tests
+with the HELP of ANT 
+
+-->
+
+<project name="SemanticNeed" basedir="." default="phpunit" >
+	
+	<!--
+	${phpunit.bin} and ${phpunit.includepath} have to be set externaly to get 
+	the phpunit test execution target running a sample call (via windows cmd) 
+	in the projects root directory might look like the following : 
+	
+	ant phpunit -Dphpunit.bin=C:\ProgramFiles\php-5.2.6\includes\PHPUnit-3.4.12\phpunit.bat -Dphpunit.includepath=C:/www/mediawiki-1.16.0/
+	
+	-->
+	<target name="phpunit">
+		<exec dir="${basedir}" executable="${phpunit.bin}" failonerror="true">
+			<arg line="--include-path ${phpunit.includepath} --log-junit junit.xml" />
+		</exec>
+	</target>
+	
+</project>

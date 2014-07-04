@@ -1,0 +1,115 @@
+<?php
+/**
+ * Finder class for SMWQConstraintGateway which has various functions
+ * to retrieve arrays of SMWQConstraintGateway objects
+ * @author valev
+ *
+ */
+
+abstract class SNESMWQConstraintFinder extends SNESMWQConstraintGateway{
+	
+	/**
+	 * retrieves constraints from given gateway objects qids
+	 * @param	$gateway			array of SMWQGateway objects
+	 * @return  $constraints		array of SMWQConstraint objects
+	 */
+	
+	public function findByQid($gateways){
+		try{
+			if(empty($gateways)){
+				return array();
+			}
+			
+			$db = SNECoreConfig::getDB();
+			extract($db->tableNames('smwq_constraint', 'smwq_query'));
+			
+			$dummy = new SMWQConstraintGateway();
+			$proSQL = '';
+			//get columns and values to be inserted
+			foreach($gateways as $key => $gateway){
+				if($gateway == end($gateways)){
+					$proSQL .= ' '.$dummy->getQidDbField().' = "'.$gateway->getQid().'"';
+				}
+				else{
+					$proSQL .= ' '.$dummy->getQidDbField().' = "'.$gateway->getQid().'" OR';
+				}
+			}
+
+			$sql = 'SELECT * FROM ' . $smwq_constraint . ' WHERE '.$proSQL;
+			
+			$constraints = array();
+			$sqlres = $db->query($sql);
+			for($i=0;$i<$db->numRows($sqlres);$i++){
+				$constraint = new SMWQConstraintGateway();
+				$constraint->instantiateFromDb($db->fetchobject($sqlres));
+				$constraints[] = $constraint;
+			}
+			return $constraints;
+		}catch(Exception $e){
+			throw new Exception('');
+		}
+	}
+	
+	/** Finds a List of SMWQConstraintGateway Objects by a list of SMWQConstraints
+	 * @param		$constraints			Array of SMWQConstraint objects			
+	 * @return		$constraints			Array of SMWQConstraints as returned from the DB
+	**/
+	
+	public function findByConstraints($constraints){
+		try{
+			if(empty($constraints)){
+				return array();
+			}
+			$db = SNECoreConfig::getDB();
+			extract($db->tableNames('smwq_constraint', 'smwq_query'));
+			$proSQL = '';
+			//get columns and values to be inserted
+			foreach($constraints as $key => $constraint){
+				if($constraint->getIsCategory() == '1'){
+					//TODO should i even save the namespace tag of categories in the database
+					$constraint->setProperty(null);
+				}
+				else{
+					$constraint->setValue(null);
+				}
+				$variables = $constraint->getSetVariables();
+				$proSQL .= '(';
+				foreach($variables as $key => $value){
+					if($value == end($variables)){
+						$proSQL .= ''.$key.' = "'.$value.'"';
+					}
+					else{
+						$proSQL .= ''.$key.' = "'.$value.'" AND ';
+					}
+				}
+				if($constraint == end($constraints)){
+					$proSQL .= ')';
+				}
+				else{
+					$proSQL .= ') OR ';
+				}
+			}
+			
+			//TODO rework with the getDbField
+			$sql = 'SELECT const.*, query.smwq_query_page FROM ' . $smwq_constraint . ' AS const INNER JOIN 
+				' . $smwq_query . ' AS query ON smwq_query_qid = smwq_constraint_qid WHERE smwq_constraint_qid IN'.
+				' (SELECT smwq_constraint_qid FROM ' . $smwq_constraint . ' WHERE ('.
+				$proSQL.') AND smwq_constraint_qid IN (SELECT'.
+				' smwq_query_qid FROM '. $smwq_query . ' WHERE smwq_query_active = "1"))'.
+				' ORDER BY smwq_constraint_property, smwq_constraint_value';
+			
+			$constraints = array();
+			$sqlres = $db->query($sql);
+			for($i=0;$i<$db->numRows($sqlres);$i++){
+				$constraint = new SNESMWQConstraintGateway();
+				$constraint->instantiateFromDb($db->fetchobject($sqlres));
+				$constraints[] = $constraint;
+			}
+			return $constraints;
+			
+		}catch(Exception $e){
+			//TODO 
+			throw new Exception('');
+		}
+	}
+}

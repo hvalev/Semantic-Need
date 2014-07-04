@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/waves/!svn/ver/4246/trunk/SemanticNeed/SemanticNeed-Ext/includes/specialpages
+END
+SNESemanticQueryInfo.php
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/includes/specialpages/SNESemanticQueryInfo.php
+END
+SNEMockSemanticMatches.php
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/waves/!svn/ver/4246/trunk/SemanticNeed/SemanticNeed-Ext/includes/specialpages/SNEMockSemanticMatches.php
+END
+SNEMockMissingAnnotations.php
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/includes/specialpages/SNEMockMissingAnnotations.php
+END
+SNESemanticMatches.php
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/includes/specialpages/SNESemanticMatches.php
+END
+SNEAskLog.php
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/includes/specialpages/SNEAskLog.php
+END

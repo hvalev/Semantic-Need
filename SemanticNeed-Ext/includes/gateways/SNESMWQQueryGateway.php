@@ -1,0 +1,86 @@
+<?php
+/**
+ * class that extends on the existing SNE-Core SMWQQueryGateway class
+ * to add more functionality
+ * @author spell
+ *
+ */
+
+class SNESMWQQueryGateway extends SMWQQueryGateway{
+	
+	/**
+	 * instantiate a SNESMWQQueryGateway from another object
+	 * @param 		$SMWQQueryGateway			SMWQQueryGateway
+	 */
+		
+	public function instantiateFromObject($SMWQQueryGateway){
+		foreach($this as $key => $value){
+			$fncSet = 'set'.$key;
+			$fncGet = 'get'.$key;
+			$this->$fncSet($SMWQQueryGateway->$fncGet()); 
+		}
+	}
+	
+	/**
+	 * instantiate a SNESMWQQueryGateway from the database
+	 * @param		 $stdObject					stdObject
+	 */
+	
+	public function instantiateFromDb($stdObject){
+		$stdObject = (array) $stdObject;
+		foreach($this as $key => $value){
+			$fncSet = 'set'.$key;
+			$db = SNECoreConfig::getDB();
+			extract($db->tableNames('smwq_query'));
+			$table = preg_replace("/\`/", '', $smwq_query);
+			$this->$fncSet($stdObject[$table.'_'.$key]); 
+		}
+	}
+	
+	/**
+	 * retrieves HTML code for headings of a table based on the
+	 * variables that are set in the object
+	 */
+	
+	public function iterateForHeadings(){
+		$headings = array();
+		foreach($this as $key => $value){
+			$headings[] = HTML::rawElement('th', array(), $key);
+		}
+		$headings = implode('', $headings);
+		return $headings;
+	}
+	
+	/**
+	 * retrieves HTML code for rows of a table based on the
+	 * variables that are set in the object
+	 */
+	
+	public function iterateForRows(){
+		$rows = array();
+		foreach($this as $key => $value){
+			//compact the string to a small link that leads to the internal wiki query page
+			if($key == 'queryLink'){
+				$rows[] = HTML::rawElement('td', array(), HTML::rawElement('a', array('href' => $value), 'link'));
+			}
+			//make the qid a link to SemanticQueryInfo Special Page
+			elseif($key == 'qid'){
+				$page = Title::makeTitle(NS_SPECIAL, 'SNESemanticQueryInfo');
+				$link = HTML::rawElement('a', array('href' => $page->getFullURL().'/'.$value), $value);
+				$rows[] = HTML::rawElement('td', array(), $link);
+			}
+			//make a link to the wikipage
+			elseif($key == 'page'){
+				$page = Title::makeTitle(NS_MAIN, $value);
+				$link = HTML::rawElement('a', array('href' => $page->getFullURL()), $value);
+				$rows[] = HTML::rawElement('td', array(), $link);
+			}
+			else{
+				$rows[] = HTML::rawElement('td', array(), $value);
+			}
+		}
+		$rows = implode('', $rows);
+		return $rows;
+	}
+}
+?>

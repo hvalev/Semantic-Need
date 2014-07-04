@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/waves/!svn/ver/4252/trunk/SemanticNeed/SemanticNeed-Ext/test
+END
+INFO.TXT
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/waves/!svn/ver/4252/trunk/SemanticNeed/SemanticNeed-Ext/test/INFO.TXT
+END
+SNE_TestCase.php
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/waves/!svn/ver/4252/trunk/SemanticNeed/SemanticNeed-Ext/test/SNE_TestCase.php
+END
+MediaWiki_TestCase.php
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/test/MediaWiki_TestCase.php
+END
+SNE_SemanticQueryManagerTest.php
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/test/SNE_SemanticQueryManagerTest.php
+END
+SNE_DummyTest.php
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/waves/!svn/ver/4252/trunk/SemanticNeed/SemanticNeed-Ext/test/SNE_DummyTest.php
+END
+MockUser.php
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/test/MockUser.php
+END

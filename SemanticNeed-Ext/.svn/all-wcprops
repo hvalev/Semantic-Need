@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/waves/!svn/ver/4259/trunk/SemanticNeed/SemanticNeed-Ext
+END
+readme.txt
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/readme.txt
+END
+SNE.php
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/SNE.php
+END
+.buildpath
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/.buildpath
+END
+build.xml
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/build.xml
+END
+.project
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/waves/!svn/ver/4244/trunk/SemanticNeed/SemanticNeed-Ext/.project
+END
+phpunit.xml.dist
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/waves/!svn/ver/4241/trunk/SemanticNeed/SemanticNeed-Ext/phpunit.xml.dist
+END

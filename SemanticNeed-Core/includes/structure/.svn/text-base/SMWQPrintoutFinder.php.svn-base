@@ -1,0 +1,55 @@
+<?php
+/**
+ * Finder class for SMWQPrintoutGateway which has various functions
+ * to retrieve arrays of SMWQPrintoutGateway Objects objects
+ * @author valev
+ *
+ */
+
+abstract class SMWQPrintoutFinder extends SMWQPrintoutGateway{
+	
+	/** Finds an array of SMWQPrintout Objects through SMWQGateway objects
+	 * @param		$gateways					Array of SMWQGateway objects			
+	 * @return		$printouts					Array of SMWQPrintout objects as returned from the DB
+	 */	
+
+	public static function findByQid($gateways){
+		try{
+			if(empty($gateways)){
+				return array();
+			}
+			$db = SNECoreConfig::getDB();
+			extract($db->tableNames('smwq_select', 'smwq_query'));
+			
+			$dummy = new SMWQPrintoutGateway();
+			
+			$proSQL = '';
+			//get columns and values to be inserted
+			foreach($gateways as $key => $gateway){
+				if($gateway == end($gateways)){
+					$proSQL .= $dummy->getQidDbField().' = "'.$gateway->getQid().'"';
+				}
+				else{
+					$proSQL .= $dummy->getQidDbField().' = "'.$gateway->getQid().'" OR ';
+				}
+			}
+			
+			$sql = 'SELECT * FROM ' . $smwq_select . ' WHERE '.$proSQL;
+			
+			$printouts = array();
+			$sqlres = $db->query($sql);
+			for($i=0;$i<$db->numRows($sqlres);$i++){
+				$printout = new SMWQPrintoutGateway();
+				$printout->instantiateFromDb($db->fetchobject($sqlres));
+				$printouts[] = $printout;
+			}
+			return $printouts;
+			
+		}catch(Exception $e){
+			//TODO 
+			throw new Exception('');
+		}
+	}
+	
+}
+?>

@@ -1,0 +1,299 @@
+<?php
+/**Gateway Class for Semantic Need Query Database table that
+ * enables a separation layer between the database and the
+ * in-memory objects through this Gateway Class.
+ * @author Hristo Valev
+ */
+
+class SMWQQueryGateway{
+	protected $qid;
+	protected $type = null;
+	protected $format = null;
+	protected $limit = null;
+	protected $results = null;
+	protected $page = null;
+	protected $queryString = null;
+	protected $link = null;
+	protected $alias = null;
+	protected $isConcept = 0;
+	protected $isSubquery = 0;
+	protected $createdOn = null;
+	protected $removedOn = null;
+	//TODO:needed?
+	protected $nearMatches = null;
+	//TODO:needed?
+	protected $missingValues = null;
+	protected $userId = null;
+	protected $active = null;
+	
+	public function getVarName($var){
+		foreach($this as $key => $value){
+			if($var == $value){
+				return $key;
+			}
+		}
+		return;
+	}
+/*
+	public function getSetVariables(){
+		$array = array();
+		foreach($this as $key => $value){
+			if($value != null){
+				$array[$key] = $value;
+			}
+		}
+		return $array;
+	}
+	*/
+	/** Creates an instance of SMWQQueryGateway from a php stdObject 
+	 * @param		$stdObject			stdObject
+	 * @return		void				
+	 */
+	
+	public function instantiateFromDb($stdObject){
+		$stdObject = (array) $stdObject;
+		foreach($this as $key => $value){
+			$fncSet = 'set'.$key;
+			$db = SNECoreConfig::getDB();
+			extract($db->tableNames('smwq_query'));
+			$table = preg_replace("/\`/", '', $smwq_query);
+			$this->$fncSet($stdObject[$table.'_'.$key]); 
+		}
+	}
+	
+	/** Inserts the current SMWQQuery object in the Database 
+	 * @param		void			
+	 * @return		void				
+	 */
+	
+	public function insert(){
+		try{			
+			$db = SNECoreConfig::getDB();
+			extract($db->tableNames('smwq_query'));
+			$table = preg_replace("/\`/", '', $smwq_query);
+			$array = array();
+			foreach($this as $key => $value){
+				$array[$table.'_'.$key] = $value;
+			}
+			$db->insert($smwq_query, $array); 
+		}catch(Exception $e){
+			throw new Exception('insertion of invalid query data');
+		}
+	}
+	
+	/** Updates the current SMWQQueryObject with the current values in the Database 
+	 * @param		void			
+	 * @return		void				
+	 */
+	
+	public function update(){
+		try{
+			$db = SNECoreConfig::getDB();
+			extract($db->tableNames('smwq_query'));
+			$table = preg_replace("/\`/", '', $smwq_query);
+			$array = array();
+			foreach($this as $key => $value){
+				$array[$table.'_'.$key] = $value;
+			}
+			$conds[$table.'_'.$this->getVarName($this->getQid())] = $this->getQid();
+			$db->update($smwq_query, $array, $conds);
+		}catch(Exception $e){
+			throw new Exception('updating query with invalid data');
+		}
+	}
+	
+	
+	/** Marks the current SMWQQueryObject as active in the Database 
+	 * @param		void			
+	 * @return		void				
+	 */
+	
+	public function active(){
+		//TODO not working for some reason
+		try{
+			$this->setActive(1);
+			$this->setRemovedOn(null);
+			$this->update();
+		}catch(Exception $e){
+			throw new Exception('updating query with invalid data');
+		}
+	}
+	
+	/** Marks the current SMWQQueryObject as inactive in the Database 
+	 * @param		void			
+	 * @return		void				
+	 */
+	
+	public function inactive(){
+		//TODO not working for some reason
+		try{
+			$this->setActive(0);
+			$this->setRemovedOn('CURRENT_TIMESTAMP');
+			$this->update();
+			
+		}catch(Exception $e){
+			throw new Exception('updating query with invalid data');
+		}
+	}
+	
+	/** Checks if the current SMWQQueryObject exists in the Database 
+	 * @param		void			
+	 * @return		void				
+	 */
+
+	public function exists(){
+		try{
+			$db = SNECoreConfig::getDB();
+			extract($db->tableNames('smwq_query'));
+			$table = preg_replace("/\`/", '', $smwq_query);
+			$var[$table.'_'.$this->getVarName($this->getQid())] = $this->getQid();
+			$sqlres = $db->select($smwq_query, '*' , $var);
+			if($db->numRows($sqlres)==1){
+				return true;
+			}
+			else{
+				return false;
+			}
+				
+		}catch(Exception $e){
+			throw new Exception('updating query with invalid data');
+		}
+	}
+	
+	public function setQid($qid){
+		$this->qid = $qid;
+	}
+	
+	public function getQid(){
+		return $this->qid;
+	}
+	
+	public function setType($type){
+		$this->type = $type;
+	}
+	
+	public function getType(){
+		return $this->type;
+	}
+	
+	public function setFormat($format){
+		$this->format = $format;
+	}
+	
+	public function getFormat(){
+		return $this->format;
+	}
+	
+	public function setLimit($limit){
+		$this->limit = $limit;
+	}
+	
+	public function getLimit(){
+		return $this->limit;
+	}
+	
+	public function setResults($results){
+		$this->results = $results;
+	}
+	
+	public function getResults(){
+		return $this->results;
+	}
+	
+	public function setPage($page){
+		$this->page = $page;
+	}
+	
+	public function getPage(){
+		return $this->page;
+	}
+	
+	public function setQueryString($string){
+		$this->queryString = $string;
+	}
+	
+	public function getQueryString(){
+		return $this->queryString;
+	}
+	
+	public function setLink($link){
+		$this->link = $link;
+	}
+	
+	public function getLink(){
+		return $this->link;
+	}
+	
+	public function setAlias($alias){
+		$this->alias = $alias;
+	}
+	
+	public function getAlias(){
+		return $this->alias;
+	}
+	
+	public function setIsConcept($bool){
+		$this->isConcept = $bool;
+	}
+	
+	public function getIsConcept(){
+		return $this->isConcept;
+	}
+	
+	public function setIsSubquery($bool){
+		$this->isSubquery = $bool;
+	}
+	
+	public function getIsSubquery(){
+		return $this->isSubquery;
+	}
+	
+	public function setCreatedOn($bool){
+		$this->createdOn = $bool;
+	}
+	
+	public function getCreatedOn(){
+		return $this->createdOn;
+	}
+	
+	public function setRemovedOn($bool){
+		$this->removedOn = $bool;
+	}
+	
+	public function getRemovedOn(){
+		return $this->removedOn;
+	}
+	
+	public function setNearMatches($nearMatches){
+		$this->nearMatches = $nearMatches;
+	}
+	
+	public function getNearMatches(){
+		return $this->nearMatches;
+	}
+	
+	public function setMissingValues($missingValues){
+		$this->missingValues = $missingValues;
+	}
+	
+	public function getMissingValues(){
+		return $this->missingValues;
+	}
+	
+	public function setUserId($id){
+		$this->userId = $id;
+	}
+	
+	public function getUserId(){
+		return $this->userId;
+	}
+	
+	public function setActive($active){
+		$this->active = $active;
+	}
+	
+	public function getActive(){
+		return $this->active;
+	}
+}
+?>
